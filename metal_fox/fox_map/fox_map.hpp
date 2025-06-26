@@ -20,6 +20,8 @@ class fox_map {
 public:
     bool init();
     bool insert(key k, value v);
+    bool insert_multi(bucket * begin, bucket * end);
+    bool lookup_multi(key * begin, key * end);
     value lookup(key k);
     
     ~fox_map() = default;
