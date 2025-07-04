@@ -29,12 +29,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		88DA586B2E18040A002F11BE /* types.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = types.hpp; sourceTree = "<group>"; };
+		88DA586C2E181BE3002F11BE /* cpp_types.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = cpp_types.hpp; sourceTree = "<group>"; };
 		88DB229B2E16DE6F007B1630 /* utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
 		88DB229C2E16DE7B007B1630 /* utils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = utils.cpp; sourceTree = "<group>"; };
 		88DB22A02E16ECB6007B1630 /* map.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = map.cpp; sourceTree = "<group>"; };
 		88DB22A32E1707C2007B1630 /* mtl_map.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = mtl_map.hpp; sourceTree = "<group>"; };
-		88DB22A62E170876007B1630 /* metal.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = metal.hpp; sourceTree = "<group>"; };
-		88DB22A72E170B99007B1630 /* metal.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = metal.ipp; sourceTree = "<group>"; };
+		88DB22A72E170B99007B1630 /* device.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = device.hpp; sourceTree = "<group>"; };
 		88E3CC3B2E16B8FD00143853 /* Foundation.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Foundation.hpp; sourceTree = "<group>"; };
 		88E3CC3C2E16B8FD00143853 /* NSArray.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NSArray.hpp; sourceTree = "<group>"; };
 		88E3CC3D2E16B8FD00143853 /* NSAutoreleasePool.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NSAutoreleasePool.hpp; sourceTree = "<group>"; };
@@ -181,8 +182,9 @@
 		88DB22A42E170861007B1630 /* common */ = {
 			isa = PBXGroup;
 			children = (
-				88DB22A72E170B99007B1630 /* metal.ipp */,
-				88DB22A62E170876007B1630 /* metal.hpp */,
+				88DA586C2E181BE3002F11BE /* cpp_types.hpp */,
+				88DA586B2E18040A002F11BE /* types.hpp */,
+				88DB22A72E170B99007B1630 /* device.hpp */,
 			);
 			path = common;
 			sourceTree = "<group>";

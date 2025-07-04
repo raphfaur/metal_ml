@@ -2,6 +2,38 @@
 #include "../utils/metal_config.hpp"
 #include <stdexcept>
 
+// General metal-related utils
+#define define_mtl_buffer(name) \
+size_t name = -1;
+
+class MetalDevice {
+    MTL::Device * _mtl_device = nullptr;
+    MTL::CommandQueue * _map_cmd_q = nullptr;
+    MTL::Library * _lib = nullptr;
+    
+    // Internal but exposed
+    std::vector<MTL::ComputePipelineState *> _pipelines;
+    std::unordered_map<uint8_t,MTL::Buffer*> _buffers;
+    
+    bool _init();
+    void _clear_buffer_index(uint8_t id);
+
+public:
+    bool request_buffer(uint8_t id, size_t size);
+    bool request_buffer(uint8_t id, const void * begin, size_t size);
+    MTL::ComputePipelineState * get_pipeline(size_t);
+    MTL::Buffer * get_buffer(size_t);
+    
+    bool load_kernels(std::vector<std::string> kernels);
+    MTL::CommandBuffer * get_command_buffer();
+    MetalDevice();
+    
+    MetalDevice(MetalDevice& other) = delete;
+    MetalDevice& operator=(MetalDevice& other) = delete;
+    ~MetalDevice();
+    
+};
+
 MetalDevice::MetalDevice(){
     // Get GPU device
     _mtl_device = MTL::CreateSystemDefaultDevice();
@@ -45,6 +77,7 @@ bool MetalDevice::load_kernels(std::vector<std::string> kernels){
     NS::Error * error;
     require(_mtl_device, err);
     for (auto k = kernels.begin(); k < kernels.end(); k++){
+        debug("Building kernel {}", *k);
         auto k_name = NS::String::string(k->data(), NS::UTF8StringEncoding);
         auto computeFunction = _lib->newFunction(k_name);
         require(computeFunction, err);
