@@ -1,3 +1,4 @@
+#include <memory>
 #include "../common/device.hpp"
 #include "../common/types.hpp"
 
@@ -6,7 +7,7 @@ template <typename K, typename V> struct __is_valid_key_value_size {
                                sizeof(V) <= sizeof(__MTL_MAX_ATOMIC_TYPE));
 };
 
-template <typename K, typename V, size_t S,
+template <typename K, typename V,
           typename Enable =
               std::enable_if_t<__is_valid_key_value_size<K, V>::value, void>>
 class mtl_map {
@@ -17,10 +18,11 @@ class mtl_map {
     using value = V;
 
   private:
-    static const size_t _memory_map_size = S * sizeof(bucket);
+    size_t _memory_map_size = 0;
+    size_t _size = 0;
 
-    MetalDevice _mtl_device;
-
+    std::shared_ptr<MetalDevice> _mtl_device;
+    
     // Buffers
     typedef enum {
         BUF_MAIN = 0,
@@ -34,6 +36,7 @@ class mtl_map {
     bool _init();
 
   public:
+    void reserve(size_t size);
     bool init();
     void clear();
     bool insert(pair<K, V> pair);
@@ -42,7 +45,8 @@ class mtl_map {
     value lookup(key k);
 
     ~mtl_map() = default;
-    mtl_map() = default;
+    mtl_map() = delete;
+    mtl_map(std::shared_ptr<MetalDevice>);
     mtl_map(mtl_map &other) = delete;
     mtl_map &operator=(mtl_map &other) = delete;
 };

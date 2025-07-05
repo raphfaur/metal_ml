@@ -11,8 +11,13 @@
 const char *fox_map_kernels[_mtl_map_kernel::_KER_MAX] = {"map_insert",
                                                           "map_lookup"};
 
-template <typename K, typename V, size_t S, typename Enable>
-bool mtl_map<K, V, S, Enable>::_init() {
+template <typename K, typename V, typename Enable>
+mtl_map<K, V, Enable>::mtl_map(std::shared_ptr<MetalDevice> device) {
+    _mtl_device = device;
+}
+
+template <typename K, typename V, typename Enable>
+bool mtl_map<K, V, Enable>::_init() {
     std::vector<std::string> templated_kernels;
     for (size_t i = 0; i < _mtl_map_kernel::_KER_MAX; i++) {
         templated_kernels.push_back(
@@ -22,33 +27,33 @@ bool mtl_map<K, V, S, Enable>::_init() {
 
     // Allocate main memory for the hash table
     require_exit(
-        _mtl_device.request_buffer(_mtl_map_buffer::BUF_MAIN, _memory_map_size),
+        _mtl_device->request_buffer(_mtl_map_buffer::BUF_MAIN, _memory_map_size),
         false);
-    memset(_mtl_device.get_buffer(_mtl_map_buffer::BUF_MAIN)->contents(),
+    memset(_mtl_device->get_buffer(_mtl_map_buffer::BUF_MAIN)->contents(),
            SENTINEL, _memory_map_size);
 
     // Map size config
     require_exit(
-        _mtl_device.request_buffer(_mtl_map_buffer::BUF_SIZE, sizeof(uint64_t)),
+        _mtl_device->request_buffer(_mtl_map_buffer::BUF_SIZE, sizeof(uint64_t)),
         false);
     uint64_t *mapped_size = static_cast<uint64_t *>(
-        _mtl_device.get_buffer(_mtl_map_buffer::BUF_SIZE)->contents());
-    *mapped_size = S;
+        _mtl_device->get_buffer(_mtl_map_buffer::BUF_SIZE)->contents());
+    *mapped_size = _size;
 
-    _mtl_device.load_kernels(templated_kernels);
+    _mtl_device->load_kernels(templated_kernels);
 
     return true;
 err:
     return false;
 }
 
-template <typename K, typename V, size_t S, typename Enable>
-bool mtl_map<K, V, S, Enable>::init() {
+template <typename K, typename V, typename Enable>
+bool mtl_map<K, V, Enable>::init() {
     return this->_init();
 }
 
-template <typename K, typename V, size_t S, typename Enable>
-bool mtl_map<K, V, S, Enable>::insert(bucket b) {
+template <typename K, typename V, typename Enable>
+bool mtl_map<K, V, Enable>::insert(bucket b) {
     if ((b.inner.k == 0 && b.inner.v == 0))
         return false;
     return insert_multi(&b, &b + 1);
@@ -56,8 +61,8 @@ err:
     return false;
 }
 
-template <typename K, typename V, size_t S, typename Enable>
-mtl_map<K, V, S, Enable>::value mtl_map<K, V, S, Enable>::lookup(key k) {
+template <typename K, typename V, typename Enable>
+mtl_map<K, V, Enable>::value mtl_map<K, V, Enable>::lookup(key k) {
     value out = 0;
     require(lookup_multi(&k, &k + 1, &out), err);
     return out;
@@ -65,13 +70,13 @@ err:
     return false;
 }
 
-template <typename K, typename V, size_t S, typename Enable>
-bool mtl_map<K, V, S, Enable>::insert_multi(bucket *begin, bucket *end) {
-    MTL::CommandBuffer *cmd_buf = _mtl_device.get_command_buffer();
+template <typename K, typename V, typename Enable>
+bool mtl_map<K, V, Enable>::insert_multi(bucket *begin, bucket *end) {
+    MTL::CommandBuffer *cmd_buf = _mtl_device->get_command_buffer();
     auto encoder = cmd_buf->computeCommandEncoder();
 
     auto multi_ins_pipeline =
-        _mtl_device.get_pipeline(_mtl_map_kernel::KER_MULTI_INSERT);
+        _mtl_device->get_pipeline(_mtl_map_kernel::KER_MULTI_INSERT);
 
     encoder->setComputePipelineState(multi_ins_pipeline);
 
@@ -79,21 +84,21 @@ bool mtl_map<K, V, S, Enable>::insert_multi(bucket *begin, bucket *end) {
     size_t entry_n = end - begin;
 
     // Set insert args
-    require_exit(_mtl_device.request_buffer(_mtl_map_buffer::BUF_INSERT, begin,
+    require_exit(_mtl_device->request_buffer(_mtl_map_buffer::BUF_INSERT, begin,
                                             entry_n * sizeof(bucket)),
                  false);
-    encoder->setBuffer(_mtl_device.get_buffer(_mtl_map_buffer::BUF_INSERT), 0,
+    encoder->setBuffer(_mtl_device->get_buffer(_mtl_map_buffer::BUF_INSERT), 0,
                        0);
     // #if MAP_DEBUG
-    //     debug_memory((uint8_t*)_mtl_device.get_buffer(_mtl_map_buffer::BUF_INSERT)->contents(),
+    //     debug_memory((uint8_t*)_mtl_device->get_buffer(_mtl_map_buffer::BUF_INSERT)->contents(),
     //     entry_n * sizeof(bucket));
     // #endif
 
     // Set main buffer
-    encoder->setBuffer(_mtl_device.get_buffer(_mtl_map_buffer::BUF_MAIN), 0, 1);
-    encoder->setBuffer(_mtl_device.get_buffer(_mtl_map_buffer::BUF_SIZE), 0, 2);
+    encoder->setBuffer(_mtl_device->get_buffer(_mtl_map_buffer::BUF_MAIN), 0, 1);
+    encoder->setBuffer(_mtl_device->get_buffer(_mtl_map_buffer::BUF_SIZE), 0, 2);
     // #if MAP_DEBUG
-    //     debug_memory((uint8_t*)_mtl_device.get_buffer(_mtl_map_buffer::BUF_SIZE)->contents(),
+    //     debug_memory((uint8_t*)_mtl_device->get_buffer(_mtl_map_buffer::BUF_SIZE)->contents(),
     //     sizeof(uint64_t));
     // #endif
 
@@ -114,7 +119,7 @@ bool mtl_map<K, V, S, Enable>::insert_multi(bucket *begin, bucket *end) {
     debug("Elapsed time : {}", elapsed_gpu);
 
 #if MAP_DEBUG
-    debug_memory((uint8_t *)_mtl_device.get_buffer(_mtl_map_buffer::BUF_MAIN)
+    debug_memory((uint8_t *)_mtl_device->get_buffer(_mtl_map_buffer::BUF_MAIN)
                      ->contents(),
                  S * sizeof(bucket));
 #endif
@@ -125,13 +130,13 @@ err:
     return false;
 }
 
-template <typename K, typename V, size_t S, typename Enable>
-bool mtl_map<K, V, S, Enable>::lookup_multi(key *begin, key *end, value *out) {
-    MTL::CommandBuffer *cmd_buf = _mtl_device.get_command_buffer();
+template <typename K, typename V, typename Enable>
+bool mtl_map<K, V, Enable>::lookup_multi(key *begin, key *end, value *out) {
+    MTL::CommandBuffer *cmd_buf = _mtl_device->get_command_buffer();
     auto encoder = cmd_buf->computeCommandEncoder();
 
     auto multi_lookup_pipeline =
-        _mtl_device.get_pipeline(_mtl_map_kernel::KER_MULTI_LOOKUP);
+        _mtl_device->get_pipeline(_mtl_map_kernel::KER_MULTI_LOOKUP);
 
     encoder->setComputePipelineState(multi_lookup_pipeline);
 
@@ -139,25 +144,25 @@ bool mtl_map<K, V, S, Enable>::lookup_multi(key *begin, key *end, value *out) {
     size_t key_n = end - begin;
 
     // Set keys buffer
-    require_exit(_mtl_device.request_buffer(_mtl_map_buffer::BUF_LOOKUP_IN,
+    require_exit(_mtl_device->request_buffer(_mtl_map_buffer::BUF_LOOKUP_IN,
                                             begin, key_n * sizeof(key)),
                  false);
-    encoder->setBuffer(_mtl_device.get_buffer(_mtl_map_buffer::BUF_LOOKUP_IN),
+    encoder->setBuffer(_mtl_device->get_buffer(_mtl_map_buffer::BUF_LOOKUP_IN),
                        0, 0);
     //    debug_memory((uint8_t *)
-    //    _mtl_device.get_buffer(_mtl_map_buffer::BUF_LOOKUP_IN)->contents(),
+    //    _mtl_device->get_buffer(_mtl_map_buffer::BUF_LOOKUP_IN)->contents(),
     //    key_n * sizeof(key));
 
     // Set output buffer
-    require_exit(_mtl_device.request_buffer(_mtl_map_buffer::BUF_LOOKUP_OUT,
+    require_exit(_mtl_device->request_buffer(_mtl_map_buffer::BUF_LOOKUP_OUT,
                                             key_n * sizeof(value)),
                  false);
-    encoder->setBuffer(_mtl_device.get_buffer(_mtl_map_buffer::BUF_LOOKUP_OUT),
+    encoder->setBuffer(_mtl_device->get_buffer(_mtl_map_buffer::BUF_LOOKUP_OUT),
                        0, 1);
 
     // Set main buffer
-    encoder->setBuffer(_mtl_device.get_buffer(_mtl_map_buffer::BUF_MAIN), 0, 2);
-    encoder->setBuffer(_mtl_device.get_buffer(_mtl_map_buffer::BUF_SIZE), 0, 3);
+    encoder->setBuffer(_mtl_device->get_buffer(_mtl_map_buffer::BUF_MAIN), 0, 2);
+    encoder->setBuffer(_mtl_device->get_buffer(_mtl_map_buffer::BUF_SIZE), 0, 3);
 
     auto threadGroupSize =
         MTL::Size(multi_lookup_pipeline->maxTotalThreadsPerThreadgroup(), 1, 1);
@@ -171,12 +176,12 @@ bool mtl_map<K, V, S, Enable>::lookup_multi(key *begin, key *end, value *out) {
     cmd_buf->waitUntilCompleted();
 
     memcpy(out,
-           _mtl_device.get_buffer(_mtl_map_buffer::BUF_LOOKUP_OUT)->contents(),
+           _mtl_device->get_buffer(_mtl_map_buffer::BUF_LOOKUP_OUT)->contents(),
            key_n * sizeof(value));
 
 #if MAP_DEBUG
     debug_memory(
-        (uint8_t *)_mtl_device.get_buffer(_mtl_map_buffer::BUF_LOOKUP_OUT)
+        (uint8_t *)_mtl_device->get_buffer(_mtl_map_buffer::BUF_LOOKUP_OUT)
             ->contents(),
         10);
 #endif
@@ -187,8 +192,15 @@ err:
     return false;
 }
 
-template <typename K, typename V, size_t S, typename Enable>
-void mtl_map<K, V, S, Enable>::clear() {
-    memset(_mtl_device.get_buffer(_mtl_map_buffer::BUF_MAIN)->contents(),
+template <typename K, typename V, typename Enable>
+void mtl_map<K, V, Enable>::clear() {
+    memset(_mtl_device->get_buffer(_mtl_map_buffer::BUF_MAIN)->contents(),
            SENTINEL, _memory_map_size);
 }
+
+template <typename K, typename V, typename Enable>
+void mtl_map<K, V, Enable>::reserve(size_t size) {
+    _size = size;
+    _memory_map_size = _size * sizeof(bucket);
+}
+

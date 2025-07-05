@@ -1,3 +1,4 @@
+#define _LIBCPP_HAS_NO_INCOMPLETE_FORMAT
 #include <format>
 #include <iostream>
 #include <stdlib.h>

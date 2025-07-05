@@ -6,6 +6,24 @@
 	objectVersion = 56;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		9447F0872E19371C00D10943 /* python */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 9447F0882E19371C00D10943 /* Build configuration list for PBXAggregateTarget "python" */;
+			buildPhases = (
+				9447F08F2E19372600D10943 /* CopyFiles */,
+			);
+			dependencies = (
+				9447F08C2E19372200D10943 /* PBXTargetDependency */,
+				9447F08E2E19372200D10943 /* PBXTargetDependency */,
+			);
+			name = python;
+			packageProductDependencies = (
+			);
+			productName = "python-libs";
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		88DA586F2E183AFD002F11BE /* mtl_map.metal in Sources */ = {isa = PBXBuildFile; fileRef = 941938702E0C73660050D1E7 /* mtl_map.metal */; };
 		88DA58712E183AFD002F11BE /* map_benchmarks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88DB22A02E16ECB6007B1630 /* map_benchmarks.cpp */; };
@@ -19,7 +37,36 @@
 		9419388C2E0DB2E90050D1E7 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D8FD0F2E09E1B700905B03 /* QuartzCore.framework */; };
 		9419388D2E0DB2EE0050D1E7 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D8FD0B2E09DEB500905B03 /* Metal.framework */; };
 		941938902E0DBFF30050D1E7 /* mtl_map.metal in Sources */ = {isa = PBXBuildFile; fileRef = 941938702E0C73660050D1E7 /* mtl_map.metal */; };
+		9447F0682E192BC800D10943 /* metal-ml.metal in Sources */ = {isa = PBXBuildFile; fileRef = 9447F0652E192BC100D10943 /* metal-ml.metal */; };
+		9447F0722E192C3500D10943 /* metal-ml.metal in Sources */ = {isa = PBXBuildFile; fileRef = 9447F0652E192BC100D10943 /* metal-ml.metal */; };
+		9447F07A2E19304600D10943 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D8FD0D2E09E1AE00905B03 /* Foundation.framework */; };
+		9447F07C2E19305000D10943 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D8FD0F2E09E1B700905B03 /* QuartzCore.framework */; };
+		9447F0812E19310700D10943 /* metal-ml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9447F07E2E1930E100D10943 /* metal-ml.cpp */; };
+		9447F0832E19369E00D10943 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D8FD0B2E09DEB500905B03 /* Metal.framework */; };
+		9447F0912E19373900D10943 /* metalml-metal.metallib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9447F06B2E192BFE00D10943 /* metalml-metal.metallib */; };
+		9447F09C2E193CFF00D10943 /* metalml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9447F0932E193CBE00D10943 /* metalml.cpp */; };
+		9447F09E2E193D0800D10943 /* Python3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9447F09D2E193D0800D10943 /* Python3.framework */; };
+		9447F09F2E19510400D10943 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D8FD0D2E09E1AE00905B03 /* Foundation.framework */; };
+		9447F0A02E19515300D10943 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D8FD0B2E09DEB500905B03 /* Metal.framework */; };
+		9447F0A12E19515C00D10943 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D8FD0F2E09E1B700905B03 /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9447F08B2E19372200D10943 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 94D8FCF42E09DC4000905B03 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 944DC3542E1921480086C1B2;
+			remoteInfo = metalml;
+		};
+		9447F08D2E19372200D10943 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 94D8FCF42E09DC4000905B03 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9447F06A2E192BFE00D10943;
+			remoteInfo = "metalml-metal";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		88DA58772E183AFD002F11BE /* CopyFiles */ = {
@@ -39,6 +86,16 @@
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 1;
+		};
+		9447F08F2E19372600D10943 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(PROJECT_DIR)/python/libs";
+			dstSubfolderSpec = 0;
+			files = (
+				9447F0912E19373900D10943 /* metalml-metal.metallib in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -157,6 +214,16 @@
 		941938722E0C81B60050D1E7 /* config.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = config.hpp; sourceTree = "<group>"; };
 		941938842E0DB2260050D1E7 /* tests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tests; sourceTree = BUILT_PRODUCTS_DIR; };
 		941938862E0DB2260050D1E7 /* map_tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = map_tests.cpp; sourceTree = "<group>"; };
+		9447F0652E192BC100D10943 /* metal-ml.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = "metal-ml.metal"; sourceTree = "<group>"; };
+		9447F06B2E192BFE00D10943 /* metalml-metal.metallib */ = {isa = PBXFileReference; explicitFileType = "archive.metal-library"; includeInIndex = 0; path = "metalml-metal.metallib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9447F07E2E1930E100D10943 /* metal-ml.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "metal-ml.cpp"; sourceTree = "<group>"; };
+		9447F0932E193CBE00D10943 /* metalml.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = metalml.cpp; sourceTree = "<group>"; };
+		9447F0982E193CF900D10943 /* libpymetal.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libpymetal.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		9447F09D2E193D0800D10943 /* Python3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python3.framework; path = Library/Frameworks/Python3.framework; sourceTree = DEVELOPER_DIR; };
+		9447F0A22E19546800D10943 /* setup.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = setup.py; sourceTree = "<group>"; };
+		9447F0A42E1991E900D10943 /* metal.pyi */ = {isa = PBXFileReference; lastKnownFileType = text; path = metal.pyi; sourceTree = "<group>"; };
+		9447F0A52E1991E900D10943 /* map.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = map.py; sourceTree = "<group>"; };
+		944DC3552E1921480086C1B2 /* libmetalml-lib.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libmetalml-lib.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		94D8FD072E09DEA300905B03 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		94D8FD092E09DEB000905B03 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		94D8FD0B2E09DEB500905B03 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
@@ -182,6 +249,27 @@
 				9419388D2E0DB2EE0050D1E7 /* Metal.framework in Frameworks */,
 				9419388C2E0DB2E90050D1E7 /* QuartzCore.framework in Frameworks */,
 				9419388B2E0DB2E40050D1E7 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9447F0962E193CF900D10943 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9447F0A12E19515C00D10943 /* QuartzCore.framework in Frameworks */,
+				9447F09F2E19510400D10943 /* Foundation.framework in Frameworks */,
+				9447F0A02E19515300D10943 /* Metal.framework in Frameworks */,
+				9447F09E2E193D0800D10943 /* Python3.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		944DC3532E1921480086C1B2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9447F0832E19369E00D10943 /* Metal.framework in Frameworks */,
+				9447F07C2E19305000D10943 /* QuartzCore.framework in Frameworks */,
+				9447F07A2E19304600D10943 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,13 +457,6 @@
 			path = "metal-cpp";
 			sourceTree = "<group>";
 		};
-		88E3CCA32E16B9F700143853 /* mtl_kmean */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = mtl_kmean;
-			sourceTree = "<group>";
-		};
 		9419386B2E0C67EB0050D1E7 /* mtl_map */ = {
 			isa = PBXGroup;
 			children = (
@@ -395,9 +476,46 @@
 			path = tests;
 			sourceTree = "<group>";
 		};
+		9447F0742E192FD200D10943 /* shared */ = {
+			isa = PBXGroup;
+			children = (
+				9447F07E2E1930E100D10943 /* metal-ml.cpp */,
+				9447F0652E192BC100D10943 /* metal-ml.metal */,
+			);
+			path = shared;
+			sourceTree = "<group>";
+		};
+		9447F0842E1936C600D10943 /* python */ = {
+			isa = PBXGroup;
+			children = (
+				9447F0A62E1991F300D10943 /* samples */,
+				9447F0A42E1991E900D10943 /* metal.pyi */,
+				9447F0A22E19546800D10943 /* setup.py */,
+				9447F0932E193CBE00D10943 /* metalml.cpp */,
+				9447F0852E1936E000D10943 /* libs */,
+			);
+			path = python;
+			sourceTree = "<group>";
+		};
+		9447F0852E1936E000D10943 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = libs;
+			sourceTree = "<group>";
+		};
+		9447F0A62E1991F300D10943 /* samples */ = {
+			isa = PBXGroup;
+			children = (
+				9447F0A52E1991E900D10943 /* map.py */,
+			);
+			path = samples;
+			sourceTree = "<group>";
+		};
 		94D8FCF32E09DC4000905B03 = {
 			isa = PBXGroup;
 			children = (
+				9447F0842E1936C600D10943 /* python */,
 				88AC125B2E1865A90070889D /* README.md */,
 				88E3CCA22E16B8FD00143853 /* metal-cpp */,
 				88DB229F2E16EA40007B1630 /* benchmarks */,
@@ -413,6 +531,9 @@
 			children = (
 				941938842E0DB2260050D1E7 /* tests */,
 				88DA587B2E183AFD002F11BE /* benchmark */,
+				944DC3552E1921480086C1B2 /* libmetalml-lib.dylib */,
+				9447F06B2E192BFE00D10943 /* metalml-metal.metallib */,
+				9447F0982E193CF900D10943 /* libpymetal.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -420,10 +541,10 @@
 		94D8FCFE2E09DC4000905B03 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				9447F0742E192FD200D10943 /* shared */,
 				88AC12592E18618B0070889D /* includes */,
 				88DB22A42E170861007B1630 /* common */,
 				88DB229A2E16DE5F007B1630 /* utils */,
-				88E3CCA32E16B9F700143853 /* mtl_kmean */,
 				9419386B2E0C67EB0050D1E7 /* mtl_map */,
 			);
 			path = src;
@@ -432,6 +553,7 @@
 		94D8FD062E09DEA300905B03 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9447F09D2E193D0800D10943 /* Python3.framework */,
 				94D8FD0F2E09E1B700905B03 /* QuartzCore.framework */,
 				94D8FD0D2E09E1AE00905B03 /* Foundation.framework */,
 				94D8FD0B2E09DEB500905B03 /* Metal.framework */,
@@ -442,6 +564,23 @@
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		9447F0942E193CF900D10943 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		944DC3512E1921480086C1B2 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		88DA586D2E183AFD002F11BE /* benchmark */ = {
@@ -478,6 +617,59 @@
 			productReference = 941938842E0DB2260050D1E7 /* tests */;
 			productType = "com.apple.product-type.tool";
 		};
+		9447F06A2E192BFE00D10943 /* metalml-metal */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9447F06F2E192BFE00D10943 /* Build configuration list for PBXNativeTarget "metalml-metal" */;
+			buildPhases = (
+				9447F0692E192BFE00D10943 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "metalml-metal";
+			packageProductDependencies = (
+			);
+			productName = "metalml-metal";
+			productReference = 9447F06B2E192BFE00D10943 /* metalml-metal.metallib */;
+			productType = "com.apple.product-type.metal-library";
+		};
+		9447F0972E193CF900D10943 /* pymetal */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9447F0992E193CF900D10943 /* Build configuration list for PBXNativeTarget "pymetal" */;
+			buildPhases = (
+				9447F0942E193CF900D10943 /* Headers */,
+				9447F0952E193CF900D10943 /* Sources */,
+				9447F0962E193CF900D10943 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = pymetal;
+			packageProductDependencies = (
+			);
+			productName = pymetal;
+			productReference = 9447F0982E193CF900D10943 /* libpymetal.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		944DC3542E1921480086C1B2 /* metalml-lib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 944DC3582E1921480086C1B2 /* Build configuration list for PBXNativeTarget "metalml-lib" */;
+			buildPhases = (
+				944DC3512E1921480086C1B2 /* Headers */,
+				944DC3522E1921480086C1B2 /* Sources */,
+				944DC3532E1921480086C1B2 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "metalml-lib";
+			productName = metalml;
+			productReference = 944DC3552E1921480086C1B2 /* libmetalml-lib.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -488,6 +680,18 @@
 				LastUpgradeCheck = 1520;
 				TargetAttributes = {
 					941938832E0DB2260050D1E7 = {
+						CreatedOnToolsVersion = 15.2;
+					};
+					9447F06A2E192BFE00D10943 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					9447F0872E19371C00D10943 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					9447F0972E193CF900D10943 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					944DC3542E1921480086C1B2 = {
 						CreatedOnToolsVersion = 15.2;
 					};
 				};
@@ -507,6 +711,10 @@
 			targets = (
 				941938832E0DB2260050D1E7 /* tests */,
 				88DA586D2E183AFD002F11BE /* benchmark */,
+				944DC3542E1921480086C1B2 /* metalml-lib */,
+				9447F06A2E192BFE00D10943 /* metalml-metal */,
+				9447F0872E19371C00D10943 /* python */,
+				9447F0972E193CF900D10943 /* pymetal */,
 			);
 		};
 /* End PBXProject section */
@@ -518,6 +726,7 @@
 			files = (
 				88DA586F2E183AFD002F11BE /* mtl_map.metal in Sources */,
 				88DA58712E183AFD002F11BE /* map_benchmarks.cpp in Sources */,
+				9447F0682E192BC800D10943 /* metal-ml.metal in Sources */,
 				88DA58722E183AFD002F11BE /* utils.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -532,7 +741,44 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9447F0692E192BFE00D10943 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9447F0722E192C3500D10943 /* metal-ml.metal in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9447F0952E193CF900D10943 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9447F09C2E193CFF00D10943 /* metalml.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		944DC3522E1921480086C1B2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9447F0812E19310700D10943 /* metal-ml.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9447F08C2E19372200D10943 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 944DC3542E1921480086C1B2 /* metalml-lib */;
+			targetProxy = 9447F08B2E19372200D10943 /* PBXContainerItemProxy */;
+		};
+		9447F08E2E19372200D10943 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9447F06A2E192BFE00D10943 /* metalml-metal */;
+			targetProxy = 9447F08D2E19372200D10943 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		88DA58792E183AFD002F11BE /* Debug */ = {
@@ -572,6 +818,104 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYSTEM_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/metal-cpp";
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/src/includes";
+			};
+			name = Release;
+		};
+		9447F0702E192BFE00D10943 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VERSIONING_SYSTEM = "";
+			};
+			name = Debug;
+		};
+		9447F0712E192BFE00D10943 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VERSIONING_SYSTEM = "";
+			};
+			name = Release;
+		};
+		9447F0892E19371C00D10943 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		9447F08A2E19371C00D10943 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		9447F09A2E193CF900D10943 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = /Library/Developer/CommandLineTools/Library/Frameworks/;
+				SYSTEM_HEADER_SEARCH_PATHS = (
+					/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Headers,
+					"$(PROJECT_DIR)/metal-cpp",
+				);
+			};
+			name = Debug;
+		};
+		9447F09B2E193CF900D10943 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = /Library/Developer/CommandLineTools/Library/Frameworks/;
+				SYSTEM_HEADER_SEARCH_PATHS = (
+					/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Headers,
+					"$(PROJECT_DIR)/metal-cpp",
+				);
+			};
+			name = Release;
+		};
+		944DC3562E1921480086C1B2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SYSTEM_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/metal-cpp";
+			};
+			name = Debug;
+		};
+		944DC3572E1921480086C1B2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SYSTEM_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/metal-cpp";
 			};
 			name = Release;
 		};
@@ -707,6 +1051,42 @@
 			buildConfigurations = (
 				941938892E0DB2260050D1E7 /* Debug */,
 				9419388A2E0DB2260050D1E7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9447F06F2E192BFE00D10943 /* Build configuration list for PBXNativeTarget "metalml-metal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9447F0702E192BFE00D10943 /* Debug */,
+				9447F0712E192BFE00D10943 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9447F0882E19371C00D10943 /* Build configuration list for PBXAggregateTarget "python" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9447F0892E19371C00D10943 /* Debug */,
+				9447F08A2E19371C00D10943 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9447F0992E193CF900D10943 /* Build configuration list for PBXNativeTarget "pymetal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9447F09A2E193CF900D10943 /* Debug */,
+				9447F09B2E193CF900D10943 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		944DC3582E1921480086C1B2 /* Build configuration list for PBXNativeTarget "metalml-lib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				944DC3562E1921480086C1B2 /* Debug */,
+				944DC3572E1921480086C1B2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

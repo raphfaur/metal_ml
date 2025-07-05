@@ -26,7 +26,11 @@ class MetalDevice {
     bool load_kernels(std::vector<std::string> kernels);
     MTL::CommandBuffer *get_command_buffer();
     MetalDevice();
-
+    
+    // Library utils
+    bool init_lib();
+    bool init_lib(std::string metal_lib);
+    
     MetalDevice(MetalDevice &other) = delete;
     MetalDevice &operator=(MetalDevice &other) = delete;
     ~MetalDevice();
@@ -42,8 +46,6 @@ MetalDevice::MetalDevice() {
     _map_cmd_q->setLabel(
         NS::String::string("mtl_device", NS::UTF8StringEncoding));
 
-    // Create lib
-    _lib = _mtl_device->newDefaultLibrary();
     return;
 err:
     throw std::length_error("Unable to get default GPU");
@@ -72,8 +74,23 @@ bool MetalDevice::_init() {
     return true;
 }
 
+bool MetalDevice::init_lib(){
+    _lib = _mtl_device->newDefaultLibrary();
+    require_exit(_lib, false);
+    return true;
+}
+
+bool MetalDevice::init_lib(std::string metal_lib){
+    NS::Error * error;
+    _lib = _mtl_device->newLibrary(NS::String::string(metal_lib.data(), NS::UTF8StringEncoding), &error);
+    require_exit(!error, false);
+    return true;
+}
+
 bool MetalDevice::load_kernels(std::vector<std::string> kernels) {
     NS::Error *error;
+    _pipelines.clear();
+    
     require(_mtl_device, err);
     for (auto k = kernels.begin(); k < kernels.end(); k++) {
         debug("Building kernel {}", *k);
@@ -101,7 +118,7 @@ MTL::ComputePipelineState *MetalDevice::get_pipeline(size_t index) {
 void MetalDevice::_clear_buffer_index(uint8_t id) {
     auto buffer = _buffers.find(id);
     if (buffer != _buffers.end()) {
-        //        debug("Realeasing buffer {}", id);
+        debug("Realeasing buffer {}", id);
         buffer->second->release();
         _buffers.erase(buffer);
     }
@@ -118,9 +135,6 @@ bool MetalDevice::request_buffer(uint8_t id, size_t size) {
 
 bool MetalDevice::request_buffer(uint8_t id, const void *begin, size_t size) {
     //    debug("Requesting buffer from address {}", begin);
-    if (_buffers.find(id) != _buffers.end()) {
-        return true;
-    }
     _clear_buffer_index(id);
     auto buffer =
         _mtl_device->newBuffer(begin, size, MTL::ResourceStorageModeShared);

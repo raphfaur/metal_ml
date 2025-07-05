@@ -5,9 +5,11 @@
 #include "metal-ml.h"
 #include "../src/utils/utils.h"
 
+std::shared_ptr<MetalDevice> MTL_DEVICE;
+
 template <typename K, typename V, size_t S> void cpu_bench() {
-    using key = mtl_map<K, V, S>::key;
-    using value = mtl_map<K, V, S>::value;
+    using key = mtl_map<K, V>::key;
+    using value = mtl_map<K, V>::value;
     pair<key, value> *entries = new pair<key, value>[S];
     key *keys = new key[S];
 
@@ -47,7 +49,8 @@ template <typename K, typename V, size_t S> void cpu_bench() {
     debug("CPU : {} ms", elapsed_cpu);
 
     // GPU BENCH
-    mtl_map<K, V, S> test_map;
+    mtl_map<K, V> test_map (MTL_DEVICE);
+    test_map.reserve(S);
     test_map.init();
     debug("Starting GPU insertion");
     auto gpu_start = std::chrono::system_clock::now();
@@ -61,6 +64,8 @@ template <typename K, typename V, size_t S> void cpu_bench() {
 }
 
 int main(int argc, const char *argv[]) {
+    MTL_DEVICE = std::make_shared<MetalDevice>();
+    MTL_DEVICE->init_lib();
     cpu_bench<uint16_t, uint16_t, 65000>();
     cpu_bench<uint32_t, uint32_t, 10000000>();
 }
