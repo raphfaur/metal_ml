@@ -18,6 +18,6 @@ The library is also intended to be ported to python, through a standard C python
 | Map Type                                 | Insert Time (ms) | Lookup Time (ms) | Size      |
 | ---------------------------------------- | ---------------- | ---------------- | --------- |
 | `unordered_map<uint16_t, uint16_t>`      | 3.3              | 10               | 65,536    |
-| `mtl_map<uint16_t, uint16_t, 65,536>`    | 2.7              | 0.2              | 65,536    |
+| `mtl_map<uint16_t, uint16_t, 65536>`    | 2.7              | 0.2              | 65,536    |
 | `unordered_map<uint32_t, uint32_t>`      | 677.8            | 1188.4           | 5,000,000 |
-| `mtl_map<uint32_t, uint32_t, 5,000,000>` | 52.3             | 35.6             | 5,000,000 |
+| `mtl_map<uint32_t, uint32_t, 5000000>` | 52.3             | 35.6             | 5,000,000 |
