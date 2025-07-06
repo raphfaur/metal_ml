@@ -22,6 +22,7 @@ struct _metal_map_object {
 template<typename K, typename V>
 using MetalMapObject = struct _metal_map_object<K,V>;
 
+
 template<typename K, typename V>
 static int MapInit(MetalMapObject<K,V> * self, PyObject * args, PyObject * kwds) {
     size_t map_size;
@@ -89,6 +90,56 @@ static PyObject * MapInsertMulti(MetalMapObject<K, V> *self, PyObject *args) {
 
     delete [] entries;
     
+
+    Py_INCREF(Py_None);
+    return Py_None;
+
+
+};
+
+
+template<typename K, typename V>
+static PyObject * MapLookupMulti(MetalMapObject<K, V> *self, PyObject *args) {
+    Py_buffer k_buffer;
+    Py_buffer v_buffer;
+    
+    PyObject * key_exporter;
+    PyObject * value_exporter;
+    
+    using key = MetalMapObject<K, V>::key;
+    using value = MetalMapObject<K, V>::value;
+    
+    require_or_set_err( PyArg_ParseTuple(args, "OO", &key_exporter, &value_exporter) >= 0 , PyExc_RuntimeError, nullptr);
+    
+    // Check buffer protocol compatibility
+    require_or_set_err(PyObject_CheckBuffer(key_exporter), PyExc_RuntimeError, nullptr );
+    require_or_set_err(PyObject_CheckBuffer(value_exporter), PyExc_RuntimeError, nullptr );
+    
+    // Get buffers
+    require_or_set_err(!PyObject_GetBuffer(key_exporter, &k_buffer, PyBUF_SIMPLE), PyExc_RuntimeError,nullptr);
+    require_or_set_err(!PyObject_GetBuffer(value_exporter, &v_buffer, PyBUF_WRITABLE), PyExc_RuntimeError,nullptr);
+    
+    // Check data types
+    require_or_set_err((k_buffer.itemsize = sizeof(value)),PyExc_RuntimeError, nullptr);
+    
+    size_t entry_n = k_buffer.len / sizeof(value);
+    
+    value *out_values = new value[entry_n];
+
+    key *k_buf = (key *) k_buffer.buf;
+    require_or_set_err(k_buf, PyExc_RuntimeError, nullptr);
+    
+    require_or_set_err(self->_map, PyExc_RuntimeError, nullptr);
+    self->_map->lookup_multi(k_buf, k_buf + entry_n, out_values);
+    
+    memcpy(v_buffer.buf, (void *)out_values, sizeof(value) * entry_n);
+
+    
+    PyBuffer_Release(&k_buffer);
+    PyBuffer_Release(&v_buffer);
+    
+    delete [] out_values;
+
     Py_INCREF(Py_None);
     return Py_None;
 };
@@ -97,6 +148,7 @@ static PyObject * MapInsertMulti(MetalMapObject<K, V> *self, PyObject *args) {
 template<typename K, typename V>
 static PyMethodDef map_methods[] = {
     {"insert", (PyCFunction) MapInsertMulti<K,V>, METH_VARARGS, "Insert key-value"},
+    {"lookup", (PyCFunction) MapLookupMulti<K,V>, METH_VARARGS, "Lookup keys"},
     {NULL}
 };
 
@@ -123,7 +175,7 @@ static int metal_module_exec(PyObject *m){
         return -1;
     }
     __METAL_DEVICE = std::make_shared<MetalDevice>();
-    __METAL_DEVICE->init_lib("../libs/metalml-metal.metallib");
+    __METAL_DEVICE->init_lib("libs/metalml-metal.metallib");
     return 0;
 };
 

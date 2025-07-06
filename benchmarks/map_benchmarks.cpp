@@ -35,20 +35,32 @@ template <typename K, typename V, size_t S> void cpu_bench() {
 
     benchmark_init();
     
-    register_config(cpu_unordered_map);
-    register_config(gpu_mtl_map);
+    register_config(unordered_map_insert);
+    register_config(unordered_map_lookup);
+    register_config(mtl_map_insert);
+    register_config(mtl_map_lookup)
 
     // CPU
     std::unordered_map<K, V> other_map;
 
-    time_this_n(cpu_unordered_map,
+    time_this_n(unordered_map_insert,
         INIT_BLOCK(
                    other_map.clear();
+                   for (size_t idx = 0; idx < S; idx++) {
+                       out_values[idx] = other_map[keys[idx]];
+                   }
         ),
         {
         for (size_t idx = 0; idx < S; idx++) {
             other_map.insert({entries[idx].inner.k, entries[idx].inner.v});
         }
+    }, 10);
+    
+    time_this_n(unordered_map_lookup,
+        INIT_BLOCK(
+                   other_map.clear();
+        ),
+        {
         for (size_t idx = 0; idx < S; idx++) {
             out_values[idx] = other_map[keys[idx]];
         }
@@ -56,7 +68,7 @@ template <typename K, typename V, size_t S> void cpu_bench() {
 
     // GPU
     time_this_n(
-        gpu_mtl_map,
+        mtl_map_insert,
         INIT_BLOCK(
                    mtl_map<K, V> test_map(MTL_DEVICE);
                    test_map.reserve(S);
@@ -64,9 +76,28 @@ template <typename K, typename V, size_t S> void cpu_bench() {
         ),
         {
             test_map.insert_multi(entries, &entries[S]);
+        },
+        10);
+    
+    std::memset((void*)out_values, 0, sizeof(value) * S);
+    // GPU
+    time_this_n(
+        mtl_map_lookup,
+        INIT_BLOCK(
+                   mtl_map<K, V> test_map(MTL_DEVICE);
+                   test_map.reserve(S);
+                   test_map.init();
+                   test_map.insert_multi(entries, &entries[S]);
+        ),
+        {
             test_map.lookup_multi(keys, &keys[S], (value *)out_values);
         },
         10);
+    for (size_t i = 0; i < S; i++) {
+        if (out_values[i] != entries[i].inner.v) {
+            debug_error("Benchmark invalid");
+        }
+    }
     
     bench_reset();
 }
