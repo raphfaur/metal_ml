@@ -76,9 +76,13 @@
 #define info(...)
 #endif
 
+#define debug_error(...)                                                       \
+    std::cout << FRED("[ ERROR ] ") << __FILE__ << ":" << __LINE__ << " "      \
+              << std::format(__VA_ARGS__) << std::endl;
+
 // TEST
-#define test_debug(...)                                                       \
-    std::cout << FBLU("[ TEST ] ") << __FILE__ << ":" << __LINE__ << " "       \
+#define test_debug(...)                                                        \
+    std::cout << FBLU("[ TEST ] ")       \
               << std::format(__VA_ARGS__) << std::endl;
 
 #define test_assert(expr)                                                      \
@@ -112,7 +116,7 @@
 // BENCHMARK
 
 #define bench_debug(...)                                                       \
-    std::cout << FMAG("[ BENCHMARK ] ") << __FILE__ << ":" << __LINE__ << " "  \
+    std::cout << FMAG("[ BENCHMARK ] ")  \
               << std::format(__VA_ARGS__) << std::endl;
 
 #define benchmark_init()                                                       \
@@ -120,9 +124,14 @@
     auto __bench_start = std::chrono::system_clock::now();                     \
     auto __bench_stop = std::chrono::system_clock::now();                      \
     auto __elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(    \
-        __bench_stop - __bench_start);
+        __bench_stop - __bench_start);                                         \
+    std::string __test_name;
 
-#define benchmark_reset() __configs.clear()
+#define bench_reset() __configs.clear()
+
+#define bench_run(expr)                                                        \
+    bench_debug(BOLD(FMAG("Starting benchmark" #expr "\n")));                  \
+    expr;
 
 #define register_config(name)                                                  \
     std::string __config_##name(#name);                                        \
@@ -145,12 +154,12 @@
         float sum = std::accumulate(__configs[__config_##name].begin(),        \
                                     __configs[__config_##name].end(), 0.0);    \
         float mean = sum / __configs[__config_##name].size();                  \
-        bench_debug("[" #name "] config - {} runs, mean : {} ms",              \
+        bench_debug(FBLU(BOLD("[" #name "] - {} runs - mean : {} ms\n")),      \
                     __configs[__config_##name].size(), mean);                  \
     }
 
 #define time_this_n(name, init, expr, n)                                       \
-    bench_debug("Running {} runs with [" #name "] config", n);                 \
+    bench_debug(BOLD(FBLU("[" #name "] - {} runs")), n);                       \
     for (int run = 0; run < n; run++) {                                        \
         init;                                                                  \
         time_this(name, expr);                                                 \

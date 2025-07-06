@@ -71,7 +71,6 @@ kernel void multi_map_insert(device pair<K, V> * entries [[buffer(0)]],
     while (true) {
         size_t index = ( h + i * simd_width + tid ) % *map_size;
         bool cond = false;
-        
         // Check type size
         if constexpr( sizeof(pair<K, V>) > 4 ) {
             sentinel.inner.k = SENTINEL;

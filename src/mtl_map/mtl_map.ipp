@@ -117,7 +117,12 @@ bool mtl_map<K, V, Enable>::insert_multi(bucket *begin, bucket *end) {
     auto elapsed_gpu = std::chrono::duration_cast<std::chrono::milliseconds>(
         gpu_end - gpu_start);
     debug("Elapsed time : {}", elapsed_gpu);
-
+    auto s = cmd_buf->status();
+    if (s != 4) {
+        debug_error("Buffer status : {}", (int)s);
+        return false;
+    }
+    
 #if MAP_DEBUG
     debug_memory((uint8_t *)_mtl_device->get_buffer(_mtl_map_buffer::BUF_MAIN)
                      ->contents(),
@@ -185,6 +190,12 @@ bool mtl_map<K, V, Enable>::lookup_multi(key *begin, key *end, value *out) {
             ->contents(),
         10);
 #endif
+    
+    auto s = cmd_buf->status();
+    if (s != 4) {
+        debug_error("Buffer status : {}", (int)s);
+        return false;
+    }
 
     return true;
 

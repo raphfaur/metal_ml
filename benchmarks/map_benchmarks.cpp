@@ -7,6 +7,9 @@
 
 std::shared_ptr<MetalDevice> MTL_DEVICE;
 
+
+
+
 template <typename K, typename V, size_t S> void cpu_bench() {
     using key = mtl_map<K, V>::key;
     using value = mtl_map<K, V>::value;
@@ -31,13 +34,14 @@ template <typename K, typename V, size_t S> void cpu_bench() {
     volatile value *out_values = new value[S];
 
     benchmark_init();
-    register_config(cpu);
-    register_config(gpu);
+    
+    register_config(cpu_unordered_map);
+    register_config(gpu_mtl_map);
 
     // CPU
     std::unordered_map<K, V> other_map;
 
-    time_this_n(cpu,
+    time_this_n(cpu_unordered_map,
         INIT_BLOCK(
                    other_map.clear();
         ),
@@ -52,7 +56,7 @@ template <typename K, typename V, size_t S> void cpu_bench() {
 
     // GPU
     time_this_n(
-        gpu,
+        gpu_mtl_map,
         INIT_BLOCK(
                    mtl_map<K, V> test_map(MTL_DEVICE);
                    test_map.reserve(S);
@@ -63,11 +67,13 @@ template <typename K, typename V, size_t S> void cpu_bench() {
             test_map.lookup_multi(keys, &keys[S], (value *)out_values);
         },
         10);
+    
+    bench_reset();
 }
 
 int main(int argc, const char *argv[]) {
     MTL_DEVICE = std::make_shared<MetalDevice>();
     MTL_DEVICE->init_lib();
-    cpu_bench<uint16_t, uint16_t, 65536>();
-    cpu_bench<uint32_t, uint32_t, 1000000>();
+    bench_run((cpu_bench<uint16_t, uint16_t, 65536>()));
+    bench_run((cpu_bench<uint32_t, uint32_t, 5000000>()));
 }
