@@ -2,6 +2,16 @@
 #include <format>
 #include <iostream>
 #include <stdlib.h>
+
+#define DEBUG_LEVEL 1
+#define LEVEL_DEBUG 2
+#define LEVEL_INFO 1
+
+// Utils
+
+#define PASTE(x, y) x##y
+#define PASTE2(x, y) PASTE(x, y)
+
 // COLORS
 
 #define RST "\x1B[0m"
@@ -42,23 +52,34 @@
     if (buffer)                                                                \
         buffer->release();
 
+#if DEBUG_LEVEL >= LEVEL_DEBUG
 #define debug_no_line(...)                                                     \
     std::cout << "[ DEBUG ] " __FILE__ << ":" << __LINE__ << " "               \
               << std::format(__VA_ARGS__);
+#else
+#define debug_no_line(...)
+#endif
 
+#if DEBUG_LEVEL >= LEVEL_DEBUG
 #define debug(...)                                                             \
     debug_no_line(__VA_ARGS__);                                                \
     std::cout << std::endl;
+#else
+#define debug(...)
+#endif
 
-#define info(label, expr)                                                      \
+#if DEBUG_LEVEL >= LEVEL_INFO
+#define info(...)                                                              \
     std::cout << FYEL("[ INFO ] ") << __FILE__ << ":" << __LINE__ << " "       \
-              << label << " - " << expr << std::endl;
-
-#define test_debug(expr)                                                       \
-    std::cout << FBLU("[ TEST ] ") << __FILE__ << ":" << __LINE__ << " "       \
-              << expr << std::endl;
+              << std::format(__VA_ARGS__) << std::endl;
+#else
+#define info(...)
+#endif
 
 // TEST
+#define test_debug(...)                                                       \
+    std::cout << FBLU("[ TEST ] ") << __FILE__ << ":" << __LINE__ << " "       \
+              << std::format(__VA_ARGS__) << std::endl;
 
 #define test_assert(expr)                                                      \
     if (!(expr)) {                                                             \
@@ -81,6 +102,68 @@
         test_debug(FRED("Test " #func " unexpectedly passed. \n"));            \
     }
 
+#define test_run_n(expr, n)                                                    \
+    test_debug(BOLD("Performing test " #expr " - {} runs"), n);                \
+    for (int run = 0; run < n; run++) {                                        \
+        test_debug("Run {}", run);                                             \
+        test_run_must_pass(expr);                                              \
+    }
+
 // BENCHMARK
+
+#define bench_debug(...)                                                       \
+    std::cout << FMAG("[ BENCHMARK ] ") << __FILE__ << ":" << __LINE__ << " "  \
+              << std::format(__VA_ARGS__) << std::endl;
+
+#define benchmark_init()                                                       \
+    std::unordered_map<std::string, std::vector<size_t>> __configs;            \
+    auto __bench_start = std::chrono::system_clock::now();                     \
+    auto __bench_stop = std::chrono::system_clock::now();                      \
+    auto __elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(    \
+        __bench_stop - __bench_start);
+
+#define benchmark_reset() __configs.clear()
+
+#define register_config(name)                                                  \
+    std::string __config_##name(#name);                                        \
+    __configs[__config_##name];
+
+#define measure_expr(expr)                                                     \
+    __bench_start = std::chrono::system_clock::now();                          \
+    expr;                                                                      \
+    __bench_stop = std::chrono::system_clock::now();
+
+#define time_this(name, expr)                                                  \
+    measure_expr(expr) __elapsed =                                             \
+        std::chrono::duration_cast<std::chrono::milliseconds>(__bench_stop -   \
+                                                              __bench_start);  \
+    __configs[__config_##name].push_back(__elapsed.count());                   \
+    bench_debug("Running [" #name "] config : {} ms", __elapsed.count());
+
+#define dump_mean(name)                                                        \
+    {                                                                          \
+        float sum = std::accumulate(__configs[__config_##name].begin(),        \
+                                    __configs[__config_##name].end(), 0.0);    \
+        float mean = sum / __configs[__config_##name].size();                  \
+        bench_debug("[" #name "] config - {} runs, mean : {} ms",              \
+                    __configs[__config_##name].size(), mean);                  \
+    }
+
+#define time_this_n(name, init, expr, n)                                       \
+    bench_debug("Running {} runs with [" #name "] config", n);                 \
+    for (int run = 0; run < n; run++) {                                        \
+        init;                                                                  \
+        time_this(name, expr);                                                 \
+    }                                                                          \
+    dump_mean(name)
+
+#define dump_results(name)                                                     \
+    for (int i = 0; i < __configs[__config_##name].size(); i++) {              \
+        bench_debug(#name " - {} : {} ms", i, __configs[__config_##name][i]);  \
+    }
+
+#define INIT_BLOCK(...) __VA_ARGS__
+
+// Utils methods
 
 void debug_memory(uint8_t *region, size_t length);

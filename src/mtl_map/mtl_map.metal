@@ -38,7 +38,8 @@ size_t hash(K key) {
     return key;
 }
 
-constant int simd_groups_per_threadgroups = 32;
+constant int simd_groups_per_threadgroups = 1024 / 32;
+constant int simd_width = 32;
 
 template <typename K, typename V>
 kernel void multi_map_insert(device pair<K, V> * entries [[buffer(0)]],
@@ -68,16 +69,18 @@ kernel void multi_map_insert(device pair<K, V> * entries [[buffer(0)]],
     
     size_t i = 0;
     while (true) {
-        size_t index = ( h + i * simd_size + tid ) % *map_size;
+        size_t index = ( h + i * simd_width + tid ) % *map_size;
         bool cond = false;
         
         // Check type size
         if constexpr( sizeof(pair<K, V>) > 4 ) {
+            sentinel.inner.k = SENTINEL;
             using atomic_content = device atomic<K> *;
             atomic_content address = (atomic_content) (map_memory + index);
             K content = atomic_load_explicit( address, memory_order_relaxed);
-            cond = (content == sentinel.inner.k);
+            cond = (content == SENTINEL);
         } else {
+            sentinel.raw = SENTINEL;
             using atomic_content = device atomic<typename pair<K, V>::raw_t> *;
             atomic_content address = (atomic_content) (map_memory + index);
             typename pair<K, V>::raw_t content = atomic_load_explicit( address, memory_order_relaxed);
@@ -94,7 +97,7 @@ kernel void multi_map_insert(device pair<K, V> * entries [[buffer(0)]],
             uint64_t vote_v = static_cast<uint64_t>(vote);
             
             uint first_empty = ctz(vote_v);
-            size_t index_first_empty = ( h + i * simd_size + first_empty ) % *map_size;
+            size_t index_first_empty = ( h + i * simd_width + first_empty ) % *map_size;
             
             // Build bucket
             pair<K, V> b (k,v);
@@ -178,11 +181,13 @@ kernel void multi_map_lookup(device K * keys [[buffer(0)]],
 }
 
 DECLARE_TEMPLATE_LOOKUP(uint8_t, uint8_t)
+DECLARE_TEMPLATE_LOOKUP(uint8_t, uint16_t)
 DECLARE_TEMPLATE_LOOKUP(uint16_t, uint16_t)
 DECLARE_TEMPLATE_LOOKUP(uint16_t, uint8_t)
 DECLARE_TEMPLATE_LOOKUP(uint32_t, uint32_t)
 
 DECLARE_TEMPLATE_INSERT(uint8_t, uint8_t)
+DECLARE_TEMPLATE_INSERT(uint8_t, uint16_t)
 DECLARE_TEMPLATE_INSERT(uint16_t, uint16_t)
 DECLARE_TEMPLATE_INSERT(uint16_t, uint8_t)
 DECLARE_TEMPLATE_INSERT(uint32_t, uint32_t)

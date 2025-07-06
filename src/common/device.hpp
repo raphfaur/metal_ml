@@ -97,7 +97,7 @@ bool MetalDevice::load_kernels(std::vector<std::string> kernels) {
         auto k_name = NS::String::string(k->data(), NS::UTF8StringEncoding);
         auto computeFunction = _lib->newFunction(k_name);
         require(computeFunction, err);
-        info("Built kernel", k_name->utf8String());
+        debug("{}", k_name->utf8String());
         k_name->release();
         auto pipeline_state =
             _mtl_device->newComputePipelineState(computeFunction, &error);
@@ -118,7 +118,7 @@ MTL::ComputePipelineState *MetalDevice::get_pipeline(size_t index) {
 void MetalDevice::_clear_buffer_index(uint8_t id) {
     auto buffer = _buffers.find(id);
     if (buffer != _buffers.end()) {
-        debug("Realeasing buffer {}", id);
+//        debug("Realeasing buffer {}", id);
         buffer->second->release();
         _buffers.erase(buffer);
     }

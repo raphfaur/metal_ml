@@ -2,8 +2,8 @@
 #include <random>
 #include <unordered_map>
 
-#include "metal-ml.h"
 #include "../src/utils/utils.h"
+#include "metal-ml.h"
 
 std::shared_ptr<MetalDevice> MTL_DEVICE;
 
@@ -13,9 +13,9 @@ template <typename K, typename V, size_t S> void cpu_bench() {
     pair<key, value> *entries = new pair<key, value>[S];
     key *keys = new key[S];
 
-    std::vector<V> keys_source;
+    std::vector<K> keys_source;
     for (int i = 0; i < S; i++) {
-        keys_source.push_back(i);
+        keys_source.push_back(i + 1);
     }
 
     uint64_t seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -30,42 +30,44 @@ template <typename K, typename V, size_t S> void cpu_bench() {
 
     volatile value *out_values = new value[S];
 
-    // CPU BENCH
-    std::unordered_map<uint16_t, uint16_t> other_map;
+    benchmark_init();
+    register_config(cpu);
+    register_config(gpu);
 
-    debug("Starting CPU insertion");
-    auto cpu_start = std::chrono::system_clock::now();
-    for (size_t idx = 0; idx < S; idx++) {
-        other_map.insert({entries[idx].inner.k, entries[idx].inner.v});
-    }
-    for (size_t idx = 0; idx < S; idx++) {
-        out_values[idx] = other_map[keys[idx]];
-    }
+    // CPU
+    std::unordered_map<K, V> other_map;
 
-    auto cpu_end = std::chrono::system_clock::now();
-    debug("Done with CPU insertion");
-    auto elapsed_cpu = std::chrono::duration_cast<std::chrono::milliseconds>(
-        cpu_end - cpu_start);
-    debug("CPU : {} ms", elapsed_cpu);
+    time_this_n(cpu,
+        INIT_BLOCK(
+                   other_map.clear();
+        ),
+        {
+        for (size_t idx = 0; idx < S; idx++) {
+            other_map.insert({entries[idx].inner.k, entries[idx].inner.v});
+        }
+        for (size_t idx = 0; idx < S; idx++) {
+            out_values[idx] = other_map[keys[idx]];
+        }
+    }, 10);
 
-    // GPU BENCH
-    mtl_map<K, V> test_map (MTL_DEVICE);
-    test_map.reserve(S);
-    test_map.init();
-    debug("Starting GPU insertion");
-    auto gpu_start = std::chrono::system_clock::now();
-    test_map.insert_multi(entries, &entries[S]);
-    test_map.lookup_multi(keys, &keys[S], (value *)out_values);
-    auto gpu_end = std::chrono::system_clock::now();
-    debug("Done GPU insertion");
-    auto elapsed_gpu = std::chrono::duration_cast<std::chrono::milliseconds>(
-        gpu_end - gpu_start);
-    debug("GPU : {} ms", elapsed_gpu);
+    // GPU
+    time_this_n(
+        gpu,
+        INIT_BLOCK(
+                   mtl_map<K, V> test_map(MTL_DEVICE);
+                   test_map.reserve(S);
+                   test_map.init();
+        ),
+        {
+            test_map.insert_multi(entries, &entries[S]);
+            test_map.lookup_multi(keys, &keys[S], (value *)out_values);
+        },
+        10);
 }
 
 int main(int argc, const char *argv[]) {
     MTL_DEVICE = std::make_shared<MetalDevice>();
     MTL_DEVICE->init_lib();
-    cpu_bench<uint16_t, uint16_t, 65000>();
-    cpu_bench<uint32_t, uint32_t, 10000000>();
+    cpu_bench<uint16_t, uint16_t, 65536>();
+    cpu_bench<uint32_t, uint32_t, 1000000>();
 }

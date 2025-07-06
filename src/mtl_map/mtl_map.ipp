@@ -121,7 +121,7 @@ bool mtl_map<K, V, Enable>::insert_multi(bucket *begin, bucket *end) {
 #if MAP_DEBUG
     debug_memory((uint8_t *)_mtl_device->get_buffer(_mtl_map_buffer::BUF_MAIN)
                      ->contents(),
-                 S * sizeof(bucket));
+                 _size * sizeof(bucket));
 #endif
 
     return true;
@@ -200,7 +200,7 @@ void mtl_map<K, V, Enable>::clear() {
 
 template <typename K, typename V, typename Enable>
 void mtl_map<K, V, Enable>::reserve(size_t size) {
-    _size = size;
+    _size = MIN(size, pow(2, 8 * sizeof(key)));
     _memory_map_size = _size * sizeof(bucket);
 }
 
