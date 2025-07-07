@@ -37,6 +37,8 @@
 		9419388C2E0DB2E90050D1E7 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D8FD0F2E09E1B700905B03 /* QuartzCore.framework */; };
 		9419388D2E0DB2EE0050D1E7 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D8FD0B2E09DEB500905B03 /* Metal.framework */; };
 		941938902E0DBFF30050D1E7 /* mtl_map.metal in Sources */ = {isa = PBXBuildFile; fileRef = 941938702E0C73660050D1E7 /* mtl_map.metal */; };
+		9443B2FD2E1AFC2600A855A3 /* mtl_kmean.metal in Sources */ = {isa = PBXBuildFile; fileRef = 9443B2FC2E1AFC2600A855A3 /* mtl_kmean.metal */; };
+		9443B2FE2E1AFC2600A855A3 /* mtl_kmean.metal in Sources */ = {isa = PBXBuildFile; fileRef = 9443B2FC2E1AFC2600A855A3 /* mtl_kmean.metal */; };
 		9447F0682E192BC800D10943 /* metal-ml.metal in Sources */ = {isa = PBXBuildFile; fileRef = 9447F0652E192BC100D10943 /* metal-ml.metal */; };
 		9447F0722E192C3500D10943 /* metal-ml.metal in Sources */ = {isa = PBXBuildFile; fileRef = 9447F0652E192BC100D10943 /* metal-ml.metal */; };
 		9447F07A2E19304600D10943 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D8FD0D2E09E1AE00905B03 /* Foundation.framework */; };
@@ -49,6 +51,8 @@
 		9447F09F2E19510400D10943 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D8FD0D2E09E1AE00905B03 /* Foundation.framework */; };
 		9447F0A02E19515300D10943 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D8FD0B2E09DEB500905B03 /* Metal.framework */; };
 		9447F0A12E19515C00D10943 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D8FD0F2E09E1B700905B03 /* QuartzCore.framework */; };
+		9447F0AB2E1AF92A00D10943 /* mtl_kmean.ipp in Sources */ = {isa = PBXBuildFile; fileRef = 9447F0AA2E1AF92A00D10943 /* mtl_kmean.ipp */; };
+		9447F0AC2E1AF92A00D10943 /* mtl_kmean.ipp in Sources */ = {isa = PBXBuildFile; fileRef = 9447F0AA2E1AF92A00D10943 /* mtl_kmean.ipp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -214,6 +218,7 @@
 		941938722E0C81B60050D1E7 /* config.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = config.hpp; sourceTree = "<group>"; };
 		941938842E0DB2260050D1E7 /* tests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tests; sourceTree = BUILT_PRODUCTS_DIR; };
 		941938862E0DB2260050D1E7 /* map_tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = map_tests.cpp; sourceTree = "<group>"; };
+		9443B2FC2E1AFC2600A855A3 /* mtl_kmean.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = mtl_kmean.metal; sourceTree = "<group>"; };
 		9447F0652E192BC100D10943 /* metal-ml.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = "metal-ml.metal"; sourceTree = "<group>"; };
 		9447F06B2E192BFE00D10943 /* metalml-metal.metallib */ = {isa = PBXFileReference; explicitFileType = "archive.metal-library"; includeInIndex = 0; path = "metalml-metal.metallib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9447F07E2E1930E100D10943 /* metal-ml.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "metal-ml.cpp"; sourceTree = "<group>"; };
@@ -223,6 +228,8 @@
 		9447F0A22E19546800D10943 /* setup.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = setup.py; sourceTree = "<group>"; };
 		9447F0A42E1991E900D10943 /* metal.pyi */ = {isa = PBXFileReference; lastKnownFileType = text; path = metal.pyi; sourceTree = "<group>"; };
 		9447F0A52E1991E900D10943 /* map.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = map.py; sourceTree = "<group>"; };
+		9447F0A92E1AF92A00D10943 /* mtl_kmean.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = mtl_kmean.hpp; sourceTree = "<group>"; };
+		9447F0AA2E1AF92A00D10943 /* mtl_kmean.ipp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = mtl_kmean.ipp; sourceTree = "<group>"; };
 		944DC3552E1921480086C1B2 /* libmetalml-lib.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libmetalml-lib.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		94D8FD072E09DEA300905B03 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		94D8FD092E09DEB000905B03 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -512,6 +519,16 @@
 			path = samples;
 			sourceTree = "<group>";
 		};
+		9447F0A82E1AF8DD00D10943 /* mtl_kmean */ = {
+			isa = PBXGroup;
+			children = (
+				9447F0A92E1AF92A00D10943 /* mtl_kmean.hpp */,
+				9447F0AA2E1AF92A00D10943 /* mtl_kmean.ipp */,
+				9443B2FC2E1AFC2600A855A3 /* mtl_kmean.metal */,
+			);
+			path = mtl_kmean;
+			sourceTree = "<group>";
+		};
 		94D8FCF32E09DC4000905B03 = {
 			isa = PBXGroup;
 			children = (
@@ -546,6 +563,7 @@
 				88DB22A42E170861007B1630 /* common */,
 				88DB229A2E16DE5F007B1630 /* utils */,
 				9419386B2E0C67EB0050D1E7 /* mtl_map */,
+				9447F0A82E1AF8DD00D10943 /* mtl_kmean */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -724,10 +742,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9443B2FE2E1AFC2600A855A3 /* mtl_kmean.metal in Sources */,
 				88DA586F2E183AFD002F11BE /* mtl_map.metal in Sources */,
 				88DA58712E183AFD002F11BE /* map_benchmarks.cpp in Sources */,
 				9447F0682E192BC800D10943 /* metal-ml.metal in Sources */,
 				88DA58722E183AFD002F11BE /* utils.cpp in Sources */,
+				9447F0AC2E1AF92A00D10943 /* mtl_kmean.ipp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -735,8 +755,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9443B2FD2E1AFC2600A855A3 /* mtl_kmean.metal in Sources */,
 				941938902E0DBFF30050D1E7 /* mtl_map.metal in Sources */,
 				941938872E0DB2260050D1E7 /* map_tests.cpp in Sources */,
+				9447F0AB2E1AF92A00D10943 /* mtl_kmean.ipp in Sources */,
 				88DB229D2E16DE7F007B1630 /* utils.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

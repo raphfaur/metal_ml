@@ -37,3 +37,4 @@ template <typename K, typename V> union pair {
     pair(K key, V value) : inner(key, value) {};
     pair() : inner() {};
 };
+
